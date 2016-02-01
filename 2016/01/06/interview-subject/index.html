@@ -15,7 +15,7 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
 <meta property="og:description" content="之前同事换工作,参加数家公司互联网公司的面试后整理出一份面试题目集合,并将文档送我备用.源文档仅包含题目,近期整理相关答案分享到blog上,供大家一起参考.
 
 thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.Thread是类，而Runnable是接口，这就是类和接口区别，类只能继承一次，而接口可以实现多个接口。3.Thread实现Runnable接口">
-<meta property="og:updated_time" content="2016-01-22T10:45:46.000Z">
+<meta property="og:updated_time" content="2016-02-01T14:04:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA面试题解">
 <meta name="twitter:description" content="之前同事换工作,参加数家公司互联网公司的面试后整理出一份面试题目集合,并将文档送我备用.源文档仅包含题目,近期整理相关答案分享到blog上,供大家一起参考.
@@ -139,9 +139,15 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
 <li><h4 id="servlet_u7684_u5DE5_u4F5C_u539F_u7406"><a href="#servlet_u7684_u5DE5_u4F5C_u539F_u7406" class="headerlink" title="servlet的工作原理"></a>servlet的工作原理</h4><hr><hr></li>
 <li><h4 id="java__u4E2Dthrows_u548Cthrow_u7684_u533A_u522B"><a href="#java__u4E2Dthrows_u548Cthrow_u7684_u533A_u522B" class="headerlink" title="java 中throws和throw的区别"></a>java 中throws和throw的区别</h4><hr><hr></li>
 <li><h4 id="u90A3_u4E9Bweb_u670D_u52A1_u5668_u53EF_u88ABjsp_u6587_u4EF6_u8BBF_u95EE_uFF0Cjsp_u7684_u4F1A_u8BDD_u4F5C_u7528_u57DF"><a href="#u90A3_u4E9Bweb_u670D_u52A1_u5668_u53EF_u88ABjsp_u6587_u4EF6_u8BBF_u95EE_uFF0Cjsp_u7684_u4F1A_u8BDD_u4F5C_u7528_u57DF" class="headerlink" title="那些web服务器可被jsp文件访问，jsp的会话作用域"></a>那些web服务器可被jsp文件访问，jsp的会话作用域</h4><hr><hr></li>
-<li><h4 id="get_u548Cpost_u7684_u533A_u522B"><a href="#get_u548Cpost_u7684_u533A_u522B" class="headerlink" title="get和post的区别"></a>get和post的区别</h4><hr><hr></li>
-<li><h4 id="socket_u6709_u54EA_u51E0_u79CD_u4F20_u8F93_u534F_u8BAE"><a href="#socket_u6709_u54EA_u51E0_u79CD_u4F20_u8F93_u534F_u8BAE" class="headerlink" title="socket有哪几种传输协议"></a>socket有哪几种传输协议</h4><hr><hr></li>
-<li><h4 id="u5E38_u89C1_u7684http_u8BF7_u6C42_u72B6_u6001_u4EE5_u53CA_u542B_u4E49_u8868"><a href="#u5E38_u89C1_u7684http_u8BF7_u6C42_u72B6_u6001_u4EE5_u53CA_u542B_u4E49_u8868" class="headerlink" title="常见的http请求状态以及含义表"></a>常见的http请求状态以及含义表</h4><hr><hr></li>
+<li><h4 id="get_u548Cpost_u7684_u533A_u522B"><a href="#get_u548Cpost_u7684_u533A_u522B" class="headerlink" title="get和post的区别"></a>get和post的区别</h4><hr><br>1.get用户获取资源,post用于提交信息<br>2.get一般具有幂等性</li>
+</ul>
+<ol>
+<li>get传送的数据量较小，不能大于2KB。post传送的数据量较大，一般被默认为不受限制.</li>
+<li>get安全性非常低，post安全性较高。但是执行效率却比Post方法好。<hr></li>
+</ol>
+<ul>
+<li><h4 id="socket_u6709_u54EA_u51E0_u79CD_u4F20_u8F93_u534F_u8BAE"><a href="#socket_u6709_u54EA_u51E0_u79CD_u4F20_u8F93_u534F_u8BAE" class="headerlink" title="socket有哪几种传输协议"></a>socket有哪几种传输协议</h4><hr><br>(1)基于TCP的Socket:提供给应用层可靠的流式数据服务，使用TCP的Socket应用程序协议：BGP，HTTP，FTP，TELNET等。优点：基于数据传输的可靠性。<br>(2)基于UDP的Socket：适用于数据传输可靠性要求不高的场合。基于UDP的Socket应用程序或协议有：RIP，SNMP，L2TP等。<br>(3)基于RawIp的Socket:非连接，不可靠的数据传输。特点：能使应用程序直接访问网络层。基于RawIp的Socket有ping ,tracert,ospf等。<br>(4)基于链路层的Socket。为IS-IS协议提供的Socket接口。使IS-IS协议可通过Socket直接访问链路层。非连接，不可靠通信服务。<hr></li>
+<li><h4 id="u5E38_u89C1_u7684http_u8BF7_u6C42_u72B6_u6001_u4EE5_u53CA_u542B_u4E49_u8868"><a href="#u5E38_u89C1_u7684http_u8BF7_u6C42_u72B6_u6001_u4EE5_u53CA_u542B_u4E49_u8868" class="headerlink" title="常见的http请求状态以及含义表"></a>常见的http请求状态以及含义表</h4><hr><br>所有状态码的第一个数字代表了响应的五种状态之一。<br>消息（1字头）<br>成功（2字头）<br>重定向（3字头）<br>请求错误（4字头）<br>服务器错误（5、6字头）<hr></li>
 <li><h4 id="u51992_u4E2A_u7EBF_u7A0B_uFF0C_u4E00_u4E2A_u7EBF_u7A0B_u6253_u53701-52_uFF0C_u53E6_u4E00_u4E2A_u7EBF_u7A0B_u6253_u5370A-Z_uFF0C_u6253_u5370_u987A_u5E8F_u662F12A34B56C_u20265152Z"><a href="#u51992_u4E2A_u7EBF_u7A0B_uFF0C_u4E00_u4E2A_u7EBF_u7A0B_u6253_u53701-52_uFF0C_u53E6_u4E00_u4E2A_u7EBF_u7A0B_u6253_u5370A-Z_uFF0C_u6253_u5370_u987A_u5E8F_u662F12A34B56C_u20265152Z" class="headerlink" title="写2个线程，一个线程打印1-52，另一个线程打印A-Z，打印顺序是12A34B56C…5152Z"></a>写2个线程，一个线程打印1-52，另一个线程打印A-Z，打印顺序是12A34B56C…5152Z</h4><hr><hr>
 </li>
 </ul>
