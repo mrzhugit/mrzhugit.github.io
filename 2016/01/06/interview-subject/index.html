@@ -7,29 +7,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="之前同事换工作,参加数家公司互联网公司的面试后整理出一份面试题目集合,并将文档送我备用.源文档仅包含题目,近期整理相关答案分享到blog上,供大家一起参考.
 
-thread类与Runnable接口的区别
-nginx配置优化
-mysql 索引#工作原理（a b c）三个索引 a ab abc能用到 联合索引
-spring mvc 的工作原理 （dispatcherServlet等），以及和sprin">
+thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.Thread是类，而Runnable是接口，这就是类和接口区别，类只能继承一次，而接口可以实现多个接口。3.Thread实现Runnable接口">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JAVA面试题解">
 <meta property="og:url" content="http://mrzhugit.github.io/2016/01/06/interview-subject/index.html">
 <meta property="og:site_name" content="mr.zhu">
 <meta property="og:description" content="之前同事换工作,参加数家公司互联网公司的面试后整理出一份面试题目集合,并将文档送我备用.源文档仅包含题目,近期整理相关答案分享到blog上,供大家一起参考.
 
-thread类与Runnable接口的区别
-nginx配置优化
-mysql 索引#工作原理（a b c）三个索引 a ab abc能用到 联合索引
-spring mvc 的工作原理 （dispatcherServlet等），以及和sprin">
-<meta property="og:updated_time" content="2016-01-08T09:44:37.000Z">
+thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.Thread是类，而Runnable是接口，这就是类和接口区别，类只能继承一次，而接口可以实现多个接口。3.Thread实现Runnable接口">
+<meta property="og:updated_time" content="2016-01-22T10:45:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA面试题解">
 <meta name="twitter:description" content="之前同事换工作,参加数家公司互联网公司的面试后整理出一份面试题目集合,并将文档送我备用.源文档仅包含题目,近期整理相关答案分享到blog上,供大家一起参考.
 
-thread类与Runnable接口的区别
-nginx配置优化
-mysql 索引#工作原理（a b c）三个索引 a ab abc能用到 联合索引
-spring mvc 的工作原理 （dispatcherServlet等），以及和sprin">
+thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.Thread是类，而Runnable是接口，这就是类和接口区别，类只能继承一次，而接口可以实现多个接口。3.Thread实现Runnable接口">
   
     <link rel="alternative" href="/atom.xml" title="mr.zhu" type="application/atom+xml">
   
@@ -103,12 +94,13 @@ spring mvc 的工作原理 （dispatcherServlet等），以及和sprin">
       
         <p>之前同事换工作,参加数家公司互联网公司的面试后整理出一份面试题目集合,并将文档送我备用.<br>源文档仅包含题目,近期整理相关答案分享到blog上,供大家一起参考.</p>
 <ul>
-<li><h4 id="thread_u7C7B_u4E0ERunnable_u63A5_u53E3_u7684_u533A_u522B"><a href="#thread_u7C7B_u4E0ERunnable_u63A5_u53E3_u7684_u533A_u522B" class="headerlink" title="thread类与Runnable接口的区别"></a>thread类与Runnable接口的区别</h4><hr><hr></li>
-<li><h4 id="nginx_u914D_u7F6E_u4F18_u5316"><a href="#nginx_u914D_u7F6E_u4F18_u5316" class="headerlink" title="nginx配置优化"></a>nginx配置优化</h4><hr><hr></li>
+<li><h4 id="thread_u7C7B_u4E0ERunnable_u63A5_u53E3_u7684_u533A_u522B"><a href="#thread_u7C7B_u4E0ERunnable_u63A5_u53E3_u7684_u533A_u522B" class="headerlink" title="thread类与Runnable接口的区别"></a>thread类与Runnable接口的区别</h4><hr><br>1.Thread和Runnable都可以实现多线程<br>2.Thread是类，而Runnable是接口，这就是类和接口区别，类只能继承一次，而接口可以实现多个接口。<br>3.Thread实现Runnable接口<br>4.分享资源功能:一般我们使用多线程就是快速解决资源问题。Runnable可以实现资源分享，类实现Runnable并不具备线程功能，必须通过new Thread(runabble子类)调用start()启动线程，所以我们通常new一个runnable的子类，启动多个线程解决资源问题。Thread是类所以我们每次new一个对象时候资源已经实例化了，不能资源共享，Thread类要实现资源共享，可以声明变量为static，类共享的可以解决。<br>5.通过以上建议最好实现Runnable接口 实现多线程。<br>参考链接<br><a href="http://developer.51cto.com/art/201203/321042.htm" target="_blank">http://developer.51cto.com/art/201203/321042.htm</a></li>
+<li><h3 id="Runnable_u548CCallable_u7684_u533A_u522B"><a href="#Runnable_u548CCallable_u7684_u533A_u522B" class="headerlink" title="Runnable和Callable的区别"></a>Runnable和Callable的区别</h3><hr><br>(1)Callable规定的方法是call(),Runnable规定的方法是run().<br>(2)Callable的任务执行后可返回值，而Runnable的任务是不能返回值得<br>(3)call方法可以抛出异常，run方法不可以<br>(4)运行Callable任务可以拿到一个Future对象，表示异步计算的结果。它提供了检查计算是否完成的方法，以等待计算的完成，并检索计算的结果。通过Future对象可以了解任务执行情况，可取消任务的执行，还可获取执行结果<hr></li>
+<li><h4 id="nginx_u914D_u7F6E_u4F18_u5316"><a href="#nginx_u914D_u7F6E_u4F18_u5316" class="headerlink" title="nginx配置优化"></a>nginx配置优化</h4><hr><br>1.使用epoll<br>2.增加worker进程数<br>3.增加最大文件打开数<br>4.优化Linux内核参数:主要是文件句柄数量<br>详细参考链接:<br><a href="https://imququ.com/post/my-nginx-conf-for-wpo.html" target="_blank">https://imququ.com/post/my-nginx-conf-for-wpo.html</a><br><a href="http://www.cnblogs.com/leezhxing/p/4374035.html" target="_blank">http://www.cnblogs.com/leezhxing/p/4374035.html</a><hr></li>
 <li><h4 id="mysql__u7D22_u5F15_23_u5DE5_u4F5C_u539F_u7406_uFF08a_b_c_uFF09_u4E09_u4E2A_u7D22_u5F15_a_ab_abc_u80FD_u7528_u5230__u8054_u5408_u7D22_u5F15"><a href="#mysql__u7D22_u5F15_23_u5DE5_u4F5C_u539F_u7406_uFF08a_b_c_uFF09_u4E09_u4E2A_u7D22_u5F15_a_ab_abc_u80FD_u7528_u5230__u8054_u5408_u7D22_u5F15" class="headerlink" title="mysql 索引#工作原理（a b c）三个索引 a ab abc能用到 联合索引"></a>mysql 索引#工作原理（a b c）三个索引 a ab abc能用到 联合索引</h4><hr><hr></li>
-<li><h4 id="spring_mvc__u7684_u5DE5_u4F5C_u539F_u7406"><a href="#spring_mvc__u7684_u5DE5_u4F5C_u539F_u7406" class="headerlink" title="spring mvc 的工作原理"></a>spring mvc 的工作原理</h4><hr><br><hr> （dispatcherServlet等），以及和spring的区别，spring的注解，spring单例和多例的配置，如何在单例调用多例<br><hr><hr></li>
-<li><h4 id="spring__u7EBF_u7A0B_u5B89_u5168_uFF0Cspringmvc_u6574_u5408redis_uFF0Cspringmvc_u6846_u67B6_u7684_u5E95_u5C42_u5B9E_u73B0_uFF0Cspring_aop_u7684_u5B9E_u73B0_u539F_u7406"><a href="#spring__u7EBF_u7A0B_u5B89_u5168_uFF0Cspringmvc_u6574_u5408redis_uFF0Cspringmvc_u6846_u67B6_u7684_u5E95_u5C42_u5B9E_u73B0_uFF0Cspring_aop_u7684_u5B9E_u73B0_u539F_u7406" class="headerlink" title="spring 线程安全，springmvc整合redis，springmvc框架的底层实现，spring aop的实现原理"></a>spring 线程安全，springmvc整合redis，springmvc框架的底层实现，spring aop的实现原理</h4><hr><hr></li>
-<li><h4 id="redis_u7684_u6570_u636E_u7C7B_u578B"><a href="#redis_u7684_u6570_u636E_u7C7B_u578B" class="headerlink" title="redis的数据类型"></a>redis的数据类型</h4><hr><hr></li>
+<li><h4 id="spring_mvc__u7684_u5DE5_u4F5C_u539F_u7406__uFF08dispatcherServlet_u7B49_uFF09_uFF0C_u4EE5_u53CA_u548Cspring_u7684_u533A_u522B_uFF0Cspring_u7684_u6CE8_u89E3_uFF0Cspring_u5355_u4F8B_u548C_u591A_u4F8B_u7684_u914D_u7F6E_uFF0C_u5982_u4F55_u5728_u5355_u4F8B_u8C03_u7528_u591A_u4F8B"><a href="#spring_mvc__u7684_u5DE5_u4F5C_u539F_u7406__uFF08dispatcherServlet_u7B49_uFF09_uFF0C_u4EE5_u53CA_u548Cspring_u7684_u533A_u522B_uFF0Cspring_u7684_u6CE8_u89E3_uFF0Cspring_u5355_u4F8B_u548C_u591A_u4F8B_u7684_u914D_u7F6E_uFF0C_u5982_u4F55_u5728_u5355_u4F8B_u8C03_u7528_u591A_u4F8B" class="headerlink" title="spring mvc 的工作原理 （dispatcherServlet等），以及和spring的区别，spring的注解，spring单例和多例的配置，如何在单例调用多例"></a>spring mvc 的工作原理 （dispatcherServlet等），以及和spring的区别，spring的注解，spring单例和多例的配置，如何在单例调用多例</h4><hr><br>1）DispatcherServlet接收到请求后，根据对应配置文件中配置的处理器映射，找到对应的处理器映射项（HandlerMapping），根据配置的映射规则，找到对应的处理器（Handler）。<br>2）调用相应处理器中的处理方法，处理该请求，处理器处理结束后会将一个ModelAndView类型的数据传给DispatcherServlet，这其中包含了处理结果的视图和视图中要使用的数据。<br>3）DispatcherServlet根据得到的ModelAndView中的视图对象，找到一个合适的ViewResolver（视图解析器），根据视图解析器的配置，DispatcherServlet将视图要显示的数据传给对应的视图，最后给浏览器构造一个HTTP响应。<br>DispatcherServlet是整个Spring MVC的核心。它负责接收HTTP请求组织协调Spring MVC的各个组成部分。其主要工作有以下三项：<br>1）截获符合特定格式的URL请求。<br>2）初始化DispatcherServlet上下文对应的WebApplicationContext，并将其与业务层、持久化层的WebApplicationContext建立关联。<br>3）初始化Spring MVC的各个组成组件，并装配到DispatcherServlet中。<hr></li>
+<li><h4 id="spring__u7EBF_u7A0B_u5B89_u5168_uFF0Cspringmvc_u6574_u5408redis_uFF0Cspringmvc_u6846_u67B6_u7684_u5E95_u5C42_u5B9E_u73B0_uFF0Cspring_aop_u7684_u5B9E_u73B0_u539F_u7406"><a href="#spring__u7EBF_u7A0B_u5B89_u5168_uFF0Cspringmvc_u6574_u5408redis_uFF0Cspringmvc_u6846_u67B6_u7684_u5E95_u5C42_u5B9E_u73B0_uFF0Cspring_aop_u7684_u5B9E_u73B0_u539F_u7406" class="headerlink" title="spring 线程安全，springmvc整合redis，springmvc框架的底层实现，spring aop的实现原理"></a>spring 线程安全，springmvc整合redis，springmvc框架的底层实现，spring aop的实现原理</h4><hr><br><a href="http://www.cnblogs.com/doit8791/p/4093808.html" target="_blank" rel="external">Spring单例与线程安全小结</a><br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-springaopcglib/" target="_blank" rel="external">Spring AOP 实现原理与 CGLIB 应用</a><br><a href="http://www.cnblogs.com/dennisit/p/3614521.html" target="_blank" rel="external">spring 整合redis</a><hr></li>
+<li><h4 id="redis_u7684_u6570_u636E_u7C7B_u578B"><a href="#redis_u7684_u6570_u636E_u7C7B_u578B" class="headerlink" title="redis的数据类型"></a>redis的数据类型</h4><hr><br>字符串（Strings）,列表（Lists）,集合（Sets）,哈希（Hashes）,有序集合（Sorted sets）<br><a href="http://www.redis.cn/topics/data-types.html" target="_blank" rel="external">redis数据类型</a><hr></li>
 <li><h4 id="java_u7684_u57FA_u672C_u7C7B_u578B_u548C_u5F15_u7528_u7C7B_u578B"><a href="#java_u7684_u57FA_u672C_u7C7B_u578B_u548C_u5F15_u7528_u7C7B_u578B" class="headerlink" title="java的基本类型和引用类型"></a>java的基本类型和引用类型</h4><hr><hr></li>
 <li><h4 id="spring_AOP_u8BBE_u8BA1_u7684_u76EE_u7684_uFF0C_u5176_u6709_u54EA_u4E9B_u5BB9_u5668_uFF0C_u7528_u4E86_u90A3_u4E9B_u8BBE_u8BA1_u6A21_u5F0F"><a href="#spring_AOP_u8BBE_u8BA1_u7684_u76EE_u7684_uFF0C_u5176_u6709_u54EA_u4E9B_u5BB9_u5668_uFF0C_u7528_u4E86_u90A3_u4E9B_u8BBE_u8BA1_u6A21_u5F0F" class="headerlink" title="spring AOP设计的目的，其有哪些容器，用了那些设计模式"></a>spring AOP设计的目的，其有哪些容器，用了那些设计模式</h4><hr><hr></li>
 <li><h4 id="spring__u4E8B_u52A1_u9694_u79BB_u7EA7_u522B_uFF0C_u7406_u89E3_u4E8B_u52A1_u7684_u539F_u5B50_u6027_u3001_u4E00_u81F4_u6027_u3001_u9694_u79BB_u6027_u548C_u6301_u4E45_u6027_u3001_u4EE5_u53CA_u4E8B_u52A1_u7684_u9694_u79BB_u7EA7_u522B"><a href="#spring__u4E8B_u52A1_u9694_u79BB_u7EA7_u522B_uFF0C_u7406_u89E3_u4E8B_u52A1_u7684_u539F_u5B50_u6027_u3001_u4E00_u81F4_u6027_u3001_u9694_u79BB_u6027_u548C_u6301_u4E45_u6027_u3001_u4EE5_u53CA_u4E8B_u52A1_u7684_u9694_u79BB_u7EA7_u522B" class="headerlink" title="spring 事务隔离级别，理解事务的原子性、一致性、隔离性和持久性、以及事务的隔离级别"></a>spring 事务隔离级别，理解事务的原子性、一致性、隔离性和持久性、以及事务的隔离级别</h4><hr><hr></li>
@@ -157,7 +149,7 @@ spring mvc 的工作原理 （dispatcherServlet等），以及和sprin">
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://mrzhugit.github.io/2016/01/06/interview-subject/" data-id="cijo4bxr800031ds62gfm96aj" class="article-share-link">Share</a>
+      <a data-url="http://mrzhugit.github.io/2016/01/06/interview-subject/" data-id="cik41fu7c00035pv2rakujr5q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA-面试/">JAVA,面试</a></li></ul>
