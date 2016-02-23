@@ -15,7 +15,7 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
 <meta property="og:description" content="之前同事换工作,参加数家公司互联网公司的面试后整理出一份面试题目集合,并将文档送我备用.源文档仅包含题目,近期整理相关答案分享到blog上,供大家一起参考.
 
 thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.Thread是类，而Runnable是接口，这就是类和接口区别，类只能继承一次，而接口可以实现多个接口。3.Thread实现Runnable接口">
-<meta property="og:updated_time" content="2016-02-03T05:56:51.000Z">
+<meta property="og:updated_time" content="2016-02-03T08:33:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA面试题解">
 <meta name="twitter:description" content="之前同事换工作,参加数家公司互联网公司的面试后整理出一份面试题目集合,并将文档送我备用.源文档仅包含题目,近期整理相关答案分享到blog上,供大家一起参考.
@@ -113,10 +113,42 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
 <li>read commit 允许不可重复读取，但不允许脏读取</li>
 <li>Repeatable Read 禁止不可重复读取和脏读取，但是有时可能出现幻读数据。</li>
 <li>Serializable 提供严格的事务隔离。<hr></li>
-<li><h4 id="mysql_u7684_u5F15_u64CE"><a href="#mysql_u7684_u5F15_u64CE" class="headerlink" title="mysql的引擎"></a>mysql的引擎</h4><hr><hr></li>
+<li><h4 id="mysql_u7684_u5F15_u64CE"><a href="#mysql_u7684_u5F15_u64CE" class="headerlink" title="mysql的引擎"></a>mysql的引擎</h4><hr></li>
+</ul>
+<ol>
+<li>事务处理</li>
+</ol>
+<p>innodb 支持事务功能，myisam 不支持。<br>Myisam 的执行速度更快，性能更好。</p>
+<ol>
+<li>select ,update ,insert ,delete 操作</li>
+</ol>
+<p>MyISAM：如果执行大量的SELECT，MyISAM是更好的选择<br>InnoDB：如果你的数据执行大量的INSERT或UPDATE，出于性能方面的考虑，应该使用InnoDB表</p>
+<ol>
+<li>锁机制不同</li>
+</ol>
+<p>InnoDB 为行级锁，myisam 为表级锁。</p>
+<p>注意：当数据库无法确定，所找的行时，也会变为锁定整个表。<br>如： update table set num = 10 where username like “%test%”;</p>
+<ol>
+<li>查询表的行数不同</li>
+</ol>
+<p>MyISAM：select count(<em>) from table,MyISAM只要简单的读出保存好的行数，注意的是，当count(</em>)语句包含   where条件时，两种表的操作是一样的</p>
+<p>InnoDB ： InnoDB 中不保存表的具体行数，也就是说，执行select count(*) from table时，InnoDB要扫描一遍整个表来计算有多少行</p>
+<ol>
+<li>物理结构不同</li>
+</ol>
+<p>MyISAM ：每个MyISAM在磁盘上存储成三个文件。第一个文件的名字以表的名字开始，扩展名指出文件类型。<br>  .frm文件存储表定义。<br>  数据文件的扩展名为.MYD (MYData)。<br>  索引文件的扩展名是.MYI (MYIndex)</p>
+<p>InnoDB：基于磁盘的资源是InnoDB表空间数据文件和它的日志文件，InnoDB 表的大小只受限于操作系统文件的大小，一般为 2GB</p>
+<ol>
+<li><p>anto_increment 机制不同</p>
+<p>更好和更快的auto_increment处理<br>其他：为什么MyISAM会比Innodb 的查询速度快。</p>
+</li>
+</ol>
+<p>INNODB在做SELECT的时候，要维护的东西比MYISAM引擎多很多；<br>1）数据块，INNODB要缓存，MYISAM只缓存索引块，  这中间还有换进换出的减少；<br>2）innodb寻址要映射到块，再到行，MYISAM 记录的直接是文件的OFFSET，定位比INNODB要快<br>3）INNODB还需要维护MVCC一致；虽然你的场景没有，但他还是需要去检查和维护</p>
+<p><hr></p>
+<ul>
 <li><h4 id="mysql_u7684_u94FE_u63A5_u9A71_u52A8_uFF0Cc3po_u7684_u8FDE_u63A5_u6C60"><a href="#mysql_u7684_u94FE_u63A5_u9A71_u52A8_uFF0Cc3po_u7684_u8FDE_u63A5_u6C60" class="headerlink" title="mysql的链接驱动，c3po的连接池"></a>mysql的链接驱动，c3po的连接池</h4><hr><hr></li>
 <li><h4 id="hashmap__u5B9E_u73B0_u539F_u7406_28_u67E5_u627E_u3001_u8D1F_u8F7D_u56E0_u5B50_u3001hash_u503C_u3001_u975E_u7EBF_u6027_u5B89_u5168_29"><a href="#hashmap__u5B9E_u73B0_u539F_u7406_28_u67E5_u627E_u3001_u8D1F_u8F7D_u56E0_u5B50_u3001hash_u503C_u3001_u975E_u7EBF_u6027_u5B89_u5168_29" class="headerlink" title="hashmap 实现原理(查找、负载因子、hash值、非线性安全)"></a>hashmap 实现原理(查找、负载因子、hash值、非线性安全)</h4><hr><hr></li>
-<li><h4 id="threadLocl"><a href="#threadLocl" class="headerlink" title="threadLocl"></a>threadLocl</h4><hr><hr></li>
+<li><h4 id="threadLocal"><a href="#threadLocal" class="headerlink" title="threadLocal"></a>threadLocal</h4><hr><hr></li>
 <li><h4 id="java__u5E76_u53D1_u5305"><a href="#java__u5E76_u53D1_u5305" class="headerlink" title="java 并发包"></a>java 并发包</h4><hr><hr></li>
 <li><h4 id="u9879_u76EE_u7684_u6027_u80FD_uFF0C_u5F00_u53D1_u4E2D_u7684_u6027_u80FD"><a href="#u9879_u76EE_u7684_u6027_u80FD_uFF0C_u5F00_u53D1_u4E2D_u7684_u6027_u80FD" class="headerlink" title="项目的性能，开发中的性能"></a>项目的性能，开发中的性能</h4><hr><hr></li>
 <li><h4 id="u5F00_u53D1_u4E2D_u5B89_u5168_u7B56_u7565_u4EE5_u53CA_u9879_u76EE_u7684_u5B89_u5168_u7B56_u7565"><a href="#u5F00_u53D1_u4E2D_u5B89_u5168_u7B56_u7565_u4EE5_u53CA_u9879_u76EE_u7684_u5B89_u5168_u7B56_u7565" class="headerlink" title="开发中安全策略以及项目的安全策略"></a>开发中安全策略以及项目的安全策略</h4><hr><hr></li>
@@ -124,11 +156,19 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
 <li><h4 id="gc_u8BBE_u7F6E_uFF0Cjava_u7684jvm_u8C03_u4F18_uFF0C_u4EE5_u53CAjava_u5185_u5B58_u7BA1_u7406_u673A_u5236_uFF0Cjvm_u8BE6_u7EC6_u5DE5_u4F5C_u673A_u5236_uFF0Cjvm_u7684_u52A0_u8F7D_u673A_u5236"><a href="#gc_u8BBE_u7F6E_uFF0Cjava_u7684jvm_u8C03_u4F18_uFF0C_u4EE5_u53CAjava_u5185_u5B58_u7BA1_u7406_u673A_u5236_uFF0Cjvm_u8BE6_u7EC6_u5DE5_u4F5C_u673A_u5236_uFF0Cjvm_u7684_u52A0_u8F7D_u673A_u5236" class="headerlink" title="gc设置，java的jvm调优，以及java内存管理机制，jvm详细工作机制，jvm的加载机制"></a>gc设置，java的jvm调优，以及java内存管理机制，jvm详细工作机制，jvm的加载机制</h4><hr><hr></li>
 <li><h4 id="u52A8_u6001_u4EE3_u7406_u548Ccglib_u4EE3_u7406_u7684_u533A_u522B"><a href="#u52A8_u6001_u4EE3_u7406_u548Ccglib_u4EE3_u7406_u7684_u533A_u522B" class="headerlink" title="动态代理和cglib代理的区别"></a>动态代理和cglib代理的区别</h4><hr><hr></li>
 <li><h4 id="synchronized_28_29__u7684_u5B9E_u73B0_u673A_u5236_uFF0C_u4EE5_u53CA_u9501_u5B9A_u8303_u56F4"><a href="#synchronized_28_29__u7684_u5B9E_u73B0_u673A_u5236_uFF0C_u4EE5_u53CA_u9501_u5B9A_u8303_u56F4" class="headerlink" title="synchronized() 的实现机制，以及锁定范围"></a>synchronized() 的实现机制，以及锁定范围</h4><hr><hr></li>
-<li><h4 id="volatile__u5173_u952E_u5B57__u548C_transient_u5173_u952E_u5B57"><a href="#volatile__u5173_u952E_u5B57__u548C_transient_u5173_u952E_u5B57" class="headerlink" title="volatile 关键字 和 transient关键字"></a>volatile 关键字 和 transient关键字</h4><hr><hr></li>
+<li><h4 id="volatile__u5173_u952E_u5B57__u548C_transient_u5173_u952E_u5B57"><a href="#volatile__u5173_u952E_u5B57__u548C_transient_u5173_u952E_u5B57" class="headerlink" title="volatile 关键字 和 transient关键字"></a>volatile 关键字 和 transient关键字</h4><hr><br>volatile    标记字段可能会被多个线程同时访问，而不做同步<br>transient    修饰不要序列化的字段<hr></li>
 <li><h4 id="handleradapter_handlemapping__u533A_u522B"><a href="#handleradapter_handlemapping__u533A_u522B" class="headerlink" title="handleradapter handlemapping 区别"></a>handleradapter handlemapping 区别</h4><hr><hr></li>
-<li><h4 id="mysql_group__u7684_u5B9E_u9645_u542B_u4E49"><a href="#mysql_group__u7684_u5B9E_u9645_u542B_u4E49" class="headerlink" title="mysql group 的实际含义"></a>mysql group 的实际含义</h4><hr><hr></li>
-<li><h4 id="synchronized_28_29__u4FEE_u9970_u90A3_u4E9B__u4FEE_u9970_u7C7B_u548C_u65B9_u6CD5_u7684_u533A_u522B"><a href="#synchronized_28_29__u4FEE_u9970_u90A3_u4E9B__u4FEE_u9970_u7C7B_u548C_u65B9_u6CD5_u7684_u533A_u522B" class="headerlink" title="synchronized() 修饰那些 修饰类和方法的区别"></a>synchronized() 修饰那些 修饰类和方法的区别</h4><hr><hr></li>
-<li><h4 id="tomcat__u662F_u4E0D_u662F_u53EF_u4EE5_u5BF9sessionId_u91CD_u547D_u540D"><a href="#tomcat__u662F_u4E0D_u662F_u53EF_u4EE5_u5BF9sessionId_u91CD_u547D_u540D" class="headerlink" title="tomcat 是不是可以对sessionId重命名"></a>tomcat 是不是可以对sessionId重命名</h4><hr><hr></li>
+<li><h4 id="mysql_group__u7684_u5B9E_u9645_u542B_u4E49"><a href="#mysql_group__u7684_u5B9E_u9645_u542B_u4E49" class="headerlink" title="mysql group 的实际含义"></a>mysql group 的实际含义</h4><hr><br>分组<hr></li>
+<li><h4 id="synchronized_28_29__u4FEE_u9970_u90A3_u4E9B__u4FEE_u9970_u7C7B_u548C_u65B9_u6CD5_u7684_u533A_u522B"><a href="#synchronized_28_29__u4FEE_u9970_u90A3_u4E9B__u4FEE_u9970_u7C7B_u548C_u65B9_u6CD5_u7684_u533A_u522B" class="headerlink" title="synchronized() 修饰那些 修饰类和方法的区别"></a>synchronized() 修饰那些 修饰类和方法的区别</h4><hr></li>
+<li>对于普通同步方法,锁是当前实例对象</li>
+<li>对于静态同步方法,所示当前类的Class对象</li>
+<li>对于同步方法块,锁是Synchonized括号里配置的对象<hr></li>
+<li><h4 id="tomcat__u662F_u4E0D_u662F_u53EF_u4EE5_u5BF9sessionId_u91CD_u547D_u540D"><a href="#tomcat__u662F_u4E0D_u662F_u53EF_u4EE5_u5BF9sessionId_u91CD_u547D_u540D" class="headerlink" title="tomcat 是不是可以对sessionId重命名"></a>tomcat 是不是可以对sessionId重命名</h4><hr><br>可以!<br>Servlet API 3.0 后可以在web.xml 增加配置<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">session-config</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">cookie-config</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">name</span>&gt;</span>MY_JSESSIONID_YAHOOOOOO<span class="tag">&lt;/<span class="title">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">cookie-config</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">session-config</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>也可以增加tomcat启动参数<br><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPTS="$JAVA_OPTS</span><br><span class="line">-<span class="ruby"><span class="constant">Dorg</span>.apache.catalina.<span class="constant">SESSION_COOKIE_NAME</span>=<span class="constant">MYJSESSIONID</span></span><br><span class="line"></span>-<span class="ruby"><span class="constant">Dorg</span>.apache.catalina.<span class="constant">SESSION_PARAMETER_NAME</span>=myjsessionid<span class="string">"</span></span></span><br></pre></td></tr></table></figure></p>
+<p><hr></p>
+<ul>
 <li><h4 id="js__u4F5C_u7528_u57DF"><a href="#js__u4F5C_u7528_u57DF" class="headerlink" title="js 作用域"></a>js 作用域</h4><hr><hr></li>
 <li><h4 id="java_u672C_u8EAB_u662F_u5426_u63D0_u4F9B_u9884_u5904_u7406_u3001_u672C_u8EAB_u662F_u5426_u652F_u6301_u6CDB_u578B_u7F16_u7A0B"><a href="#java_u672C_u8EAB_u662F_u5426_u63D0_u4F9B_u9884_u5904_u7406_u3001_u672C_u8EAB_u662F_u5426_u652F_u6301_u6CDB_u578B_u7F16_u7A0B" class="headerlink" title="java本身是否提供预处理、本身是否支持泛型编程"></a>java本身是否提供预处理、本身是否支持泛型编程</h4><hr><hr></li>
 <li><h4 id="Java_u4EE3_u7801_u5982_u4F55_u4F18_u5316_u6267_u884C_u987A_u5E8F"><a href="#Java_u4EE3_u7801_u5982_u4F55_u4F18_u5316_u6267_u884C_u987A_u5E8F" class="headerlink" title="Java代码如何优化执行顺序"></a>Java代码如何优化执行顺序</h4><hr><hr></li>
@@ -136,8 +176,16 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
 <li><h4 id="java__u63A5_u53E3_u548C_u7C7B_u7684_u533A_u522B_uFF0Cjava_u7684_u53D1_u5C04_u673A_u5236"><a href="#java__u63A5_u53E3_u548C_u7C7B_u7684_u533A_u522B_uFF0Cjava_u7684_u53D1_u5C04_u673A_u5236" class="headerlink" title="java 接口和类的区别，java的发射机制"></a>java 接口和类的区别，java的发射机制</h4><hr><hr></li>
 <li><h4 id="struts2_u4F18_u70B9_uFF0C_u62E6_u622A_u5668_u539F_u7406"><a href="#struts2_u4F18_u70B9_uFF0C_u62E6_u622A_u5668_u539F_u7406" class="headerlink" title="struts2优点，拦截器原理"></a>struts2优点，拦截器原理</h4><hr><hr></li>
 <li><h4 id="jsp__u8FD0_u884C_u539F_u7406_u4EE5_u53CA_u8FD0_u884C_u8FC7_u7A0B"><a href="#jsp__u8FD0_u884C_u539F_u7406_u4EE5_u53CA_u8FD0_u884C_u8FC7_u7A0B" class="headerlink" title="jsp 运行原理以及运行过程"></a>jsp 运行原理以及运行过程</h4><hr><hr></li>
-<li><h4 id="tomcat_u6700_u591A_u80FD_u652F_u6301_u591A_u5C11_u7528_u6237_u5E76_u53D1_uFF0Cnginx_u9AD8_u5E76_u53D1_u7684_u914D_u7F6E_u548C_u6700_u591A_u80FD_u652F_u6301_u591A_u5C11_u5E76_u53D1"><a href="#tomcat_u6700_u591A_u80FD_u652F_u6301_u591A_u5C11_u7528_u6237_u5E76_u53D1_uFF0Cnginx_u9AD8_u5E76_u53D1_u7684_u914D_u7F6E_u548C_u6700_u591A_u80FD_u652F_u6301_u591A_u5C11_u5E76_u53D1" class="headerlink" title="tomcat最多能支持多少用户并发，nginx高并发的配置和最多能支持多少并发"></a>tomcat最多能支持多少用户并发，nginx高并发的配置和最多能支持多少并发</h4><hr><hr></li>
-<li><h4 id="u6570_u636E_u7684_u4E8B_u52A1_u9694_u79BB_u7EA7_u522B"><a href="#u6570_u636E_u7684_u4E8B_u52A1_u9694_u79BB_u7EA7_u522B" class="headerlink" title="数据的事务隔离级别"></a>数据的事务隔离级别</h4><hr><hr></li>
+<li><h4 id="tomcat_u6700_u591A_u80FD_u652F_u6301_u591A_u5C11_u7528_u6237_u5E76_u53D1_uFF0Cnginx_u9AD8_u5E76_u53D1_u7684_u914D_u7F6E_u548C_u6700_u591A_u80FD_u652F_u6301_u591A_u5C11_u5E76_u53D1"><a href="#tomcat_u6700_u591A_u80FD_u652F_u6301_u591A_u5C11_u7528_u6237_u5E76_u53D1_uFF0Cnginx_u9AD8_u5E76_u53D1_u7684_u914D_u7F6E_u548C_u6700_u591A_u80FD_u652F_u6301_u591A_u5C11_u5E76_u53D1" class="headerlink" title="tomcat最多能支持多少用户并发，nginx高并发的配置和最多能支持多少并发"></a>tomcat最多能支持多少用户并发，nginx高并发的配置和最多能支持多少并发</h4><hr>
+
+</li>
+</ul>
+<p>tomcat配置最大连接数<br>server.xml中配置  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;Connector   port=<span class="string">"8080"</span></span><br><span class="line">      maxThreads=<span class="string">"150"</span>   </span><br><span class="line">      minSpareThreads=<span class="string">"25"</span>   </span><br><span class="line">      maxSpareThreads=<span class="string">"75"</span></span><br><span class="line">      acceptCount=<span class="string">"100"</span></span><br><span class="line">      /&gt;</span><br><span class="line"><span class="preprocessor"># maxThreads=<span class="string">"150"</span>     表示最多同时处理<span class="number">150</span>个连接</span></span><br><span class="line"><span class="preprocessor"># minSpareThreads=<span class="string">"25"</span>     表示即使没有人使用也开这么多空线程等待</span></span><br><span class="line"><span class="preprocessor"># maxSpareThreads=<span class="string">"75"</span>     表示如果最多可以空<span class="number">75</span>个线程，例如某时刻有<span class="number">80</span>人访问，之后没有人访问了，则tomcat不会保留<span class="number">80</span>个空线程，而是关闭<span class="number">5</span>个空的。</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># acceptCount=<span class="string">"100"</span>   当同时连接的人数达到maxThreads时，还可以接收排队的连接，超过这个连接的则直接返回拒绝连接。</span></span><br></pre></td></tr></table></figure>
+<p>nginx配置</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">worker_processes</span> <span class="number">8</span>;</span><br><span class="line"><span class="title">worker_rlimit_nofile</span> <span class="number">655350</span>;</span><br><span class="line"><span class="title">events</span> &#123;</span><br><span class="line">   <span class="title">use</span> <span class="built_in">epoll</span>;</span><br><span class="line">    <span class="title">worker_connections</span>  <span class="number">655350</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><hr></p>
+<ul>
 <li><h4 id="ibatis_u548Chibernate_u533A_u522B"><a href="#ibatis_u548Chibernate_u533A_u522B" class="headerlink" title="ibatis和hibernate区别"></a>ibatis和hibernate区别</h4><hr><hr></li>
 <li><h4 id="java_u7684_u6587_u4EF6_u8BFB_u5199_u6D41"><a href="#java_u7684_u6587_u4EF6_u8BFB_u5199_u6D41" class="headerlink" title="java的文件读写流"></a>java的文件读写流</h4><hr><hr></li>
 <li><h4 id="mysql_u5982_u4F55_u4F7F_u7528batch_u6279_u91CF_u5904_u7406_uFF0C_u540D_u5B57_u7684_u7B2C_u4E8C_u4E2A_u5B57_u6BCD_u4E0D_u662Fa"><a href="#mysql_u5982_u4F55_u4F7F_u7528batch_u6279_u91CF_u5904_u7406_uFF0C_u540D_u5B57_u7684_u7B2C_u4E8C_u4E2A_u5B57_u6BCD_u4E0D_u662Fa" class="headerlink" title="mysql如何使用batch批量处理，名字的第二个字母不是a"></a>mysql如何使用batch批量处理，名字的第二个字母不是a</h4><hr><hr></li>
@@ -170,7 +218,7 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://mrzhugit.github.io/2016/01/06/interview-subject/" data-id="cik41fu7c00035pv2rakujr5q" class="article-share-link">Share</a>
+      <a data-url="http://mrzhugit.github.io/2016/01/06/interview-subject/" data-id="cikzge5qr0006qgv27fyo17nj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA-面试/">JAVA,面试</a></li></ul>
@@ -228,7 +276,7 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA-面试/">JAVA,面试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA-面试/">JAVA,面试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper-分布式锁服务/">zookeeper 分布式锁服务</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -237,7 +285,7 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JAVA-面试/" style="font-size: 10px;">JAVA,面试</a> <a href="/tags/life/" style="font-size: 10px;">life</a>
+      <a href="/tags/JAVA-面试/" style="font-size: 10px;">JAVA,面试</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/zookeeper-分布式锁服务/" style="font-size: 10px;">zookeeper 分布式锁服务</a>
     </div>
   </div>
 
@@ -246,7 +294,7 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -256,6 +304,10 @@ thread类与Runnable接口的区别1.Thread和Runnable都可以实现多线程2.
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/02/22/zookeeper-use/">zookeeper在项目中的使用</a>
+          </li>
         
           <li>
             <a href="/2016/01/07/buy-house/">买房记录</a>

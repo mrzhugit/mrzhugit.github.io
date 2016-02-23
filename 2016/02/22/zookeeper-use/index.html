@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>zookeeper在项目中的使用 | mr.zhu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="zookeeper 提供分布式的锁服务,是一个分布式系统中的协调者角色.在这里介绍下zookeeper的集中常用情景,使用curator框架来调用zookeeper实现.
+场景一:(barrier) slaver等待master发送信号执行任务slaver:12345678910111213141516171819202122232425/** * 等待领导发送指示再干活 */public cla">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeper在项目中的使用">
+<meta property="og:url" content="http://mrzhugit.github.io/2016/02/22/zookeeper-use/index.html">
+<meta property="og:site_name" content="mr.zhu">
+<meta property="og:description" content="zookeeper 提供分布式的锁服务,是一个分布式系统中的协调者角色.在这里介绍下zookeeper的集中常用情景,使用curator框架来调用zookeeper实现.
+场景一:(barrier) slaver等待master发送信号执行任务slaver:12345678910111213141516171819202122232425/** * 等待领导发送指示再干活 */public cla">
+<meta property="og:updated_time" content="2016-02-23T13:33:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zookeeper在项目中的使用">
+<meta name="twitter:description" content="zookeeper 提供分布式的锁服务,是一个分布式系统中的协调者角色.在这里介绍下zookeeper的集中常用情景,使用curator框架来调用zookeeper实现.
+场景一:(barrier) slaver等待master发送信号执行任务slaver:12345678910111213141516171819202122232425/** * 等待领导发送指示再干活 */public cla">
+  
+    <link rel="alternative" href="/atom.xml" title="mr.zhu" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">mr.zhu</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">JAVA 工程师</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://mrzhugit.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-zookeeper-use" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/22/zookeeper-use/" class="article-date">
+  <time datetime="2016-02-22T15:05:27.000Z" itemprop="datePublished">2016-02-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      zookeeper在项目中的使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>zookeeper 提供分布式的锁服务,是一个分布式系统中的协调者角色.<br>在这里介绍下zookeeper的集中常用情景,使用curator框架来调用zookeeper实现.</p>
+<h3 id="u573A_u666F_u4E00_3A_28barrier_29_slaver_u7B49_u5F85master_u53D1_u9001_u4FE1_u53F7_u6267_u884C_u4EFB_u52A1"><a href="#u573A_u666F_u4E00_3A_28barrier_29_slaver_u7B49_u5F85master_u53D1_u9001_u4FE1_u53F7_u6267_u884C_u4EFB_u52A1" class="headerlink" title="场景一:(barrier) slaver等待master发送信号执行任务"></a>场景一:(barrier) slaver等待master发送信号执行任务</h3><p>slaver:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 等待领导发送指示再干活</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Worker</span> </span>&#123;</span><br><span class="line">    <span class="comment">//协调节点</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/examples/barrier"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String zkUrl = <span class="string">"localhost:2181"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        CuratorFramework client = CuratorFrameworkFactory.newClient(zkUrl, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client.start();</span><br><span class="line">            DistributedBarrier barrier = <span class="keyword">new</span> DistributedBarrier(client, PATH);</span><br><span class="line">            barrier.setBarrier();</span><br><span class="line">            System.out.println(<span class="string">"等待master信号"</span>);</span><br><span class="line">            barrier.waitOnBarrier();</span><br><span class="line">            System.out.println(<span class="string">"开始执行任务"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            CloseableUtils.closeQuietly(client);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>master:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 领导人发话后,下面工人开始干活</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Master</span> </span>&#123;</span><br><span class="line">    <span class="comment">//协调节点</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/examples/barrier"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String zkUrl = <span class="string">"localhost:2181"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        CuratorFramework client = CuratorFrameworkFactory.newClient(zkUrl, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client.start();</span><br><span class="line">            DistributedBarrier barrier = <span class="keyword">new</span> DistributedBarrier(client, PATH);</span><br><span class="line">            barrier.setBarrier();</span><br><span class="line">            System.out.println(<span class="string">"发送信号"</span>);</span><br><span class="line">            barrier.removeBarrier();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            CloseableUtils.closeQuietly(client);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="u573A_u666F_u4E8C_3A_28double_barrier_29_u591A_u8282_u70B9_u90FD_u5C31_u7EEA_u540E_u5F00_u59CB_u5DE5_u4F5C"><a href="#u573A_u666F_u4E8C_3A_28double_barrier_29_u591A_u8282_u70B9_u90FD_u5C31_u7EEA_u540E_u5F00_u59CB_u5DE5_u4F5C" class="headerlink" title="场景二:(double barrier)多节点都就绪后开始工作"></a>场景二:(double barrier)多节点都就绪后开始工作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 3个进程一起开始,一起结束</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Worker</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/examples/barrier"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> workCount = <span class="number">3</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        CuratorFramework client = CuratorFrameworkFactory.newClient(<span class="string">"localhost:2181"</span>, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client.start();</span><br><span class="line">            DistributedDoubleBarrier barrier = <span class="keyword">new</span> DistributedDoubleBarrier(client, PATH,workCount);</span><br><span class="line">            System.out.println(<span class="string">"等待全部就绪"</span>);</span><br><span class="line">            barrier.enter();</span><br><span class="line">            System.out.println(<span class="string">"全部就绪,开始执行任务"</span>);</span><br><span class="line">            Thread.sleep(<span class="number">1000</span> * (<span class="keyword">new</span> Random().nextInt(<span class="number">10</span>)));</span><br><span class="line">            System.out.println(<span class="string">"执行完毕,等待全部完毕"</span>);</span><br><span class="line">            barrier.leave();</span><br><span class="line">            System.out.println(<span class="string">"全部完毕"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            CloseableUtils.closeQuietly(client);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="u5E94_u7528_u573A_u666F_u4E09_3A_28leader_selector_29__u591A_u8FDB_u7A0B_u95F4_u4E3B_u8282_u70B9_u9009_u4E3E_2C_u89C4_u907F_u7A0B_u5E8F_u5355_u70B9_u6545_u969C"><a href="#u5E94_u7528_u573A_u666F_u4E09_3A_28leader_selector_29__u591A_u8FDB_u7A0B_u95F4_u4E3B_u8282_u70B9_u9009_u4E3E_2C_u89C4_u907F_u7A0B_u5E8F_u5355_u70B9_u6545_u969C" class="headerlink" title="应用场景三:(leader selector) 多进程间主节点选举,规避程序单点故障"></a>应用场景三:(leader selector) 多进程间主节点选举,规避程序单点故障</h3><p>client负责链接zookeeper监控node节点变化:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExampleClient</span> <span class="keyword">extends</span> <span class="title">LeaderSelectorListenerAdapter</span> <span class="keyword">implements</span> <span class="title">Closeable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LeaderSelector leaderSelector;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger leaderCount = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ExampleClient</span><span class="params">(CuratorFramework client, String path, String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        leaderSelector = <span class="keyword">new</span> LeaderSelector(client, path, <span class="keyword">this</span>);</span><br><span class="line">        leaderSelector.autoRequeue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        leaderSelector.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        leaderSelector.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">takeLeadership</span><span class="params">(CuratorFramework client)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(name + <span class="string">" 现在是组织者. "</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (; <span class="keyword">true</span>; ) &#123;</span><br><span class="line">                System.out.println(<span class="string">"会议组织中"</span>);</span><br><span class="line">                Thread.sleep(<span class="number">1000</span> * <span class="number">10</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.err.println(<span class="string">"异常情况出现,会议组织中断"</span>);</span><br><span class="line">            Thread.currentThread().interrupt();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            System.out.println(name + <span class="string">" 分享会结束.\n"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>主逻辑类:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 主节点选举示例</span><br><span class="line"> * 多进程仅有一个为主节点.其余进程为备用节点.</span><br><span class="line"> * 主节点关闭后备用节点中会选举出另外一个作为主节点.</span><br><span class="line"> * &lt;p&gt;</span><br><span class="line"> * 在候选人的控制台回车后开始中断</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LeaderSelectorExample</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/examples/leader"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String userName = String.valueOf(<span class="keyword">new</span> Random().nextInt(<span class="number">1000</span>));</span><br><span class="line">        System.out.println(<span class="string">"候选人:"</span> + userName);</span><br><span class="line">        System.out.println(<span class="string">"输入回车开始调休\n"</span>);</span><br><span class="line">        CuratorFramework client = <span class="keyword">null</span>;</span><br><span class="line">        ExampleClient example = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client = CuratorFrameworkFactory.newClient(<span class="string">"127.0.0.1:2181"</span>, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</span><br><span class="line">            example = <span class="keyword">new</span> ExampleClient(client, PATH, userName);</span><br><span class="line">            client.start();</span><br><span class="line">            example.start();</span><br><span class="line">            <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in)).readLine();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"回家..."</span>);</span><br><span class="line">            CloseableUtils.closeQuietly(example);</span><br><span class="line">            CloseableUtils.closeQuietly(client);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="u573A_u666F_u56DB_3A_u591A_u7A0B_u5E8F_u95F4_u7684_u91CD_u5165_u9501"><a href="#u573A_u666F_u56DB_3A_u591A_u7A0B_u5E8F_u95F4_u7684_u91CD_u5165_u9501" class="headerlink" title="场景四:多程序间的重入锁"></a>场景四:多程序间的重入锁</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 多进程之间的重入锁示例</span><br><span class="line"> *</span><br><span class="line"> * 多个应用对同一资源进行锁定</span><br><span class="line"> *</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LockingExample</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> QTY = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> REPETITIONS = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/examples/locks"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String procId = String.valueOf(<span class="keyword">new</span> Random().nextInt(<span class="number">1000</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// FakeLimitedResource simulates some external resource that can only be access by one process at a time</span></span><br><span class="line">        <span class="keyword">final</span> FakeLimitedResource resource = <span class="keyword">new</span> FakeLimitedResource();</span><br><span class="line"></span><br><span class="line">            CuratorFramework client = CuratorFrameworkFactory.newClient(<span class="string">"localhost:2181"</span>, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                client.start();</span><br><span class="line"></span><br><span class="line">                ExampleClientThatLocks example = <span class="keyword">new</span> ExampleClientThatLocks(client, PATH, resource, <span class="string">"Client "</span>+procId);</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; REPETITIONS; ++j) &#123;</span><br><span class="line">                    example.doWork(<span class="number">10</span>, TimeUnit.SECONDS);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                CloseableUtils.closeQuietly(client);</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="u573A_u666F_u4E94_3A__u591A_u7A0B_u5E8F_u95F4_u7684_u8BFB_u5199_u9501"><a href="#u573A_u666F_u4E94_3A__u591A_u7A0B_u5E8F_u95F4_u7684_u8BFB_u5199_u9501" class="headerlink" title="场景五: 多程序间的读写锁"></a>场景五: 多程序间的读写锁</h3><p>read lock:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 资源被读时,可以被其他进程读,不可被写</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadLockExample</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> QTY = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> REPETITIONS = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/examples/reade_write_locks"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        CuratorFramework client = CuratorFrameworkFactory.newClient(<span class="string">"localhost:2181"</span>, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client.start();</span><br><span class="line"></span><br><span class="line">            InterProcessReadWriteLock lock = <span class="keyword">new</span> InterProcessReadWriteLock(client,PATH);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; REPETITIONS; ++j) &#123;</span><br><span class="line">                InterProcessMutex mutex = lock.readLock();</span><br><span class="line">                System.out.println(<span class="string">"请求read lock"</span>);</span><br><span class="line">                mutex.acquire();</span><br><span class="line">                System.out.println(<span class="string">"获取read lock 成功"</span>);</span><br><span class="line">                Thread.sleep(<span class="number">1000</span> * <span class="number">10</span>);</span><br><span class="line">                mutex.release();</span><br><span class="line">                System.out.println(<span class="string">"释放read lock"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            CloseableUtils.closeQuietly(client);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>write lock<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 资源被写时其他进程不可读</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WriteLockExample</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> QTY = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> REPETITIONS = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/examples/reade_write_locks"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        CuratorFramework client = CuratorFrameworkFactory.newClient(<span class="string">"localhost:2181"</span>, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client.start();</span><br><span class="line"></span><br><span class="line">            InterProcessReadWriteLock lock = <span class="keyword">new</span> InterProcessReadWriteLock(client,PATH);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; REPETITIONS; ++j) &#123;</span><br><span class="line">                InterProcessMutex mutex = lock.writeLock();</span><br><span class="line">                System.out.println(<span class="string">"请求write lock"</span>);</span><br><span class="line">                mutex.acquire();</span><br><span class="line">                System.out.println(<span class="string">"获取write lock成功"</span>);</span><br><span class="line">                Thread.sleep(<span class="number">1000</span> * <span class="number">100</span>);</span><br><span class="line">                mutex.release();</span><br><span class="line">                System.out.println(<span class="string">"释放write lock"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            CloseableUtils.closeQuietly(client);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="u573A_u666F_u516D_3A_28shared_semaphore_29__u5171_u4EAB_u4FE1_u53F7_u91CF"><a href="#u573A_u666F_u516D_3A_28shared_semaphore_29__u5171_u4EAB_u4FE1_u53F7_u91CF" class="headerlink" title="场景六:(shared semaphore) 共享信号量"></a>场景六:(shared semaphore) 共享信号量</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 资源同时最多被2个进程锁定</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LockExample</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/examples/shared_semaphore_locks"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> scount = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        CuratorFramework client = CuratorFrameworkFactory.newClient(<span class="string">"localhost:2181"</span>, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client.start();</span><br><span class="line"></span><br><span class="line">            InterProcessSemaphoreV2 lock = <span class="keyword">new</span> InterProcessSemaphoreV2(client, PATH, scount);</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"请求lock"</span>);</span><br><span class="line">            org.apache.curator.framework.recipes.locks.Lease lease = lock.acquire();</span><br><span class="line">            System.out.println(<span class="string">"获取 lock成功"</span>);</span><br><span class="line">            Thread.sleep(<span class="number">1000</span> * <span class="number">20</span>);</span><br><span class="line">            lock.returnLease(lease);</span><br><span class="line">            System.out.println(<span class="string">"释放 lock"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            CloseableUtils.closeQuietly(client);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://mrzhugit.github.io/2016/02/22/zookeeper-use/" data-id="cikzge5qn0003qgv2hza70hst" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper-分布式锁服务/">zookeeper 分布式锁服务</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/01/07/buy-house/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">买房记录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-zookeeper-use" data-title="zookeeper在项目中的使用" data-url="http://mrzhugit.github.io/2016/02/22/zookeeper-use/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'mrzhugit'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA-面试/">JAVA,面试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper-分布式锁服务/">zookeeper 分布式锁服务</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JAVA-面试/" style="font-size: 10px;">JAVA,面试</a> <a href="/tags/life/" style="font-size: 10px;">life</a> <a href="/tags/zookeeper-分布式锁服务/" style="font-size: 10px;">zookeeper 分布式锁服务</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/02/22/zookeeper-use/">zookeeper在项目中的使用</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/07/buy-house/">买房记录</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/06/interview-subject/">JAVA面试题解</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 mr.zhu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
